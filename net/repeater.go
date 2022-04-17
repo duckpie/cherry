@@ -13,6 +13,8 @@ type GrpcEffector func(context.Context) (interface{}, error)
 
 func GrpcRepeater(effector GrpcEffector, retries int, delay time.Duration) GrpcEffector {
 	return func(ctx context.Context) (interface{}, error) {
+		startDelay := delay
+
 		for r := 0; ; r++ {
 			resp, err := effector(ctx)
 			switch err {
@@ -25,7 +27,7 @@ func GrpcRepeater(effector GrpcEffector, retries int, delay time.Duration) GrpcE
 				}
 			}
 
-			delay += time.Second
+			delay += startDelay
 			fmt.Printf("Attempt %d failed; retrying in %v\n", r+1, delay)
 
 			select {
