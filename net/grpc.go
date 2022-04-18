@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"time"
 
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
+
+type GrpcClientConnector func() (*grpc.ClientConn, error)
 
 type GrpcEffector func(context.Context) (interface{}, error)
 
